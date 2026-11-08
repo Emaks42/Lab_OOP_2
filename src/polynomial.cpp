@@ -1,5 +1,6 @@
 #include "../include/polynomial.h"
 #include <math.h>
+#include <iostream>
 
 Polynomial::Polynomial(): degree_(-1), coef(nullptr) {}
 
@@ -42,10 +43,21 @@ Polynomial& Polynomial::operator=(const Polynomial& other) {
 
 Polynomial::Polynomial(Polynomial&& other) {
     degree_ = other.degree_;
+    delete[] coef;
     coef = other.coef;
     
     other.degree_ = -1;
     other.coef = nullptr;
+}
+
+Polynomial& Polynomial::operator=(Polynomial&& other) {
+    degree_ = other.degree_;
+    delete[] coef;
+    coef = other.coef;
+    
+    other.degree_ = -1;
+    other.coef = nullptr;
+    return *this;
 }
 
 Polynomial::~Polynomial() {
@@ -54,8 +66,9 @@ Polynomial::~Polynomial() {
 }
 
 bool Polynomial::is_equal(const Polynomial& other, double eps) {
-    for (int i{}; i < degree_ + 1; ++i) {
-        if (fabs(coef[i] - other.get_coef(i)) > eps) {
+    int k = std::max(other.get_degree(), degree_);
+    for (int i{}; i < k + 1; ++i) {
+        if (fabs(this->get_coef(i) - other.get_coef(i)) > eps) {
             return false;
         }
     }
@@ -79,15 +92,15 @@ void Polynomial::add(const Polynomial& other) {
 }
 
 void Polynomial::mul(const Polynomial& other) {
-    double* new_coef = new double[other.get_degree() * degree_ + 2];
+    double* new_coef = new double[other.get_degree() + degree_ + 1];
     for (int i{}; i < other.get_degree() + 1; ++i) {
         for (int j{}; j < degree_ + 1; ++j) {
-            new_coef[i + j] = coef[j] * other.get_coef(i);
+            new_coef[i + j] += coef[j] * other.get_coef(i);
         }
     }
     delete[] coef;
     coef = new_coef;
-    degree_ *= other.get_degree();
+    degree_ += other.get_degree();
 }
 
 double Polynomial::evaluate(double value) {
@@ -102,7 +115,7 @@ double Polynomial::evaluate(double value) {
 void Polynomial::print(std::ostream& stream, double eps) {
     for (int i{}; i < degree_ + 1; ++i) {
         if (coef[i] < eps && coef[i] > -eps) {
-            break;
+            continue;
         }
         if (i > 0) {
             stream << " + ";
@@ -121,17 +134,18 @@ void Polynomial::print(std::ostream& stream, double eps) {
 
 void Polynomial::trim(double eps) {
     int zero_coef_count{};
-    for (int i{}; i < degree_ + 1; ++i) {
+    for (int i{degree_}; i > -1; --i) {
         if (coef[i] < eps && coef[i] > -eps) {
             zero_coef_count += 1;
         } else {
             break;
         }
     }
-    if (zero_coef_count == degree_ + 1) {
+    if (zero_coef_count >= degree_ + 1) {
         delete[] coef;
         coef = nullptr;
         degree_ = -1;
+        return;
     }
     double* new_coef = new double[degree_ + 1 - zero_coef_count];
     degree_ -= zero_coef_count;

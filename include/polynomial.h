@@ -1,5 +1,6 @@
 #pragma once
 #include <ostream>
+#include <algorithm>
 
 class Polynomial {
     int degree_ = -1;
@@ -11,6 +12,7 @@ public:
     Polynomial(const Polynomial& other);
     Polynomial(Polynomial&& other);
     Polynomial& operator=(const Polynomial& other);
+    Polynomial& operator=(Polynomial&& other);
 
     ~Polynomial();
 
