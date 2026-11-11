@@ -11,8 +11,8 @@ public:
     explicit Polynomial(double* ptr, int deg);
     Polynomial(const Polynomial& other);
     Polynomial(Polynomial&& other);
-    Polynomial& operator=(const Polynomial& other);
-    Polynomial& operator=(Polynomial&& other);
+    Polynomial& operator=(Polynomial other);
+    friend void swap(Polynomial& p1, Polynomial& p2);
 
     ~Polynomial();
 

@@ -61,6 +61,17 @@ TEST(PolynomialCopyTests, PolynomialCopyTestOperator)
     ASSERT_TRUE(p2.get_coef(2) == 2);
 }
 
+TEST(PolynomialCopyTests, PolynomialCopyTestSelf)
+{
+    double c[3]{1,2,2};
+    Polynomial p1(c, 2);
+    p1 = p1;
+    ASSERT_TRUE(p1.get_degree() == 2);
+    ASSERT_TRUE(p1.get_coef(0) == 1);
+    ASSERT_TRUE(p1.get_coef(1) == 2);
+    ASSERT_TRUE(p1.get_coef(2) == 2);
+}
+
 TEST(PolynomialMoveTests, PolynomialMoveTestBase)
 {
     double c[3]{1,2,2};
@@ -83,6 +94,17 @@ TEST(PolynomialMoveTests, PolynomialMoveTestOperator)
     ASSERT_TRUE(p2.get_coef(0) == 1);
     ASSERT_TRUE(p2.get_coef(1) == 2);
     ASSERT_TRUE(p2.get_coef(2) == 2);
+}
+
+TEST(PolynomialMoveTests, PolynomialMoveTestSelf)
+{
+    double c[3]{1,2,2};
+    Polynomial p1(c, 2);
+    p1 = std::move(p1);
+    ASSERT_TRUE(p1.get_degree() == 2);
+    ASSERT_TRUE(p1.get_coef(0) == 1);
+    ASSERT_TRUE(p1.get_coef(1) == 2);
+    ASSERT_TRUE(p1.get_coef(2) == 2);
 }
 
 TEST(PolynomialEqualTests, PolynomialEqualTestBase)

@@ -15,6 +15,9 @@ Polynomial::Polynomial(double* ptr, int deg): degree_(deg) {
 }
     
 Polynomial::Polynomial(const Polynomial& other) {
+    if (this == &other) {
+        return;
+    }
     if (other.get_degree() == -1) {
         degree_ = -1;
         coef = nullptr;
@@ -27,37 +30,25 @@ Polynomial::Polynomial(const Polynomial& other) {
     }
 }
 
-Polynomial& Polynomial::operator=(const Polynomial& other) {
-    if (this != &other) {
-        delete[] coef;       
+void swap(Polynomial& p1, Polynomial& p2) {
+    std::swap(p1.coef, p2.coef);
+    std::swap(p1.degree_, p2.degree_);
+}
 
-        degree_ = other.degree_;
-        coef = (degree_ + 1 > 0) ? new double[degree_ + 1] : nullptr;
-
-        for (int i{}; i < degree_ + 1; ++i) {
-            coef[i] = other.get_coef(i);
-        }
-    }
+Polynomial& Polynomial::operator=(Polynomial other) {
+    swap(*this, other);
     return *this;
 }
 
 Polynomial::Polynomial(Polynomial&& other) {
+    if (this == &other) {
+        return;
+    }
     degree_ = other.degree_;
-    delete[] coef;
     coef = other.coef;
     
     other.degree_ = -1;
     other.coef = nullptr;
-}
-
-Polynomial& Polynomial::operator=(Polynomial&& other) {
-    degree_ = other.degree_;
-    delete[] coef;
-    coef = other.coef;
-    
-    other.degree_ = -1;
-    other.coef = nullptr;
-    return *this;
 }
 
 Polynomial::~Polynomial() {
