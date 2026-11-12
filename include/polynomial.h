@@ -10,7 +10,7 @@ public:
     Polynomial();
     explicit Polynomial(double* ptr, int deg);
     Polynomial(const Polynomial& other);
-    Polynomial(Polynomial&& other);
+    Polynomial(Polynomial&& other) noexcept;
     Polynomial& operator=(Polynomial other);
     friend void swap(Polynomial& p1, Polynomial& p2);
 

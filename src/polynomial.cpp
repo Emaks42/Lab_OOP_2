@@ -40,7 +40,7 @@ Polynomial& Polynomial::operator=(Polynomial other) {
     return *this;
 }
 
-Polynomial::Polynomial(Polynomial&& other) {
+Polynomial::Polynomial(Polynomial&& other) noexcept {
     if (this == &other) {
         return;
     }
